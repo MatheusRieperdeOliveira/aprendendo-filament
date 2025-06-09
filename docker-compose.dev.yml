@@ -1,0 +1,19 @@
+services:
+  mvp_app:
+    build:
+      context: .
+      dockerfile: DockerfileDev
+    ports:
+      - "9002:92"
+    volumes:
+      - .:/var/www
+
+  mvp_database:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: mvp_database
+      MYSQL_ROOT_PASSWORD: leagueofdraven
+    ports:
+      - "3307:3307"
+
