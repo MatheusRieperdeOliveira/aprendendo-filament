@@ -1,8 +1,13 @@
 <div class="flex">
-    <input type="text" class="input" placeholder="message">
-    <button class="button">
+    <x-filament::input
+        class="input"
+        type="text"
+        wire:model="message"
+    />
+    <x-filament::button class="button" wire:click="handleMessage">
         ->
-    </button>
+    </x-filament::button>
+
     <style>
         .input{
             color: #1a1a1a;

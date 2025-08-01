@@ -2,13 +2,14 @@
 
 namespace App\Livewire;
 
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class ChatHeaderComponent extends Component
 {
     public ?array $contact = null;
 
-    #[\Livewire\Attributes\On('contactSelected')]
+    #[On('contactSelected')]
     public function setContact($contact)
     {
         $this->contact = $contact;
