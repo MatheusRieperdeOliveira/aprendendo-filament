@@ -24,11 +24,12 @@ class ChatBodyComponent extends Component
         ],
     ];
 
-    #[On('echo:messages,send_message')]
+    protected $listeners = ['echo:messages,send' => 'messageReceived'];
     public function messageReceived($payload)
     {
         dd($payload);
     }
+
     public function render(): View
     {
         return view('livewire.chat-body-component');

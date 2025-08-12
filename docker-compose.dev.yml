@@ -7,6 +7,8 @@ services:
       - "9002:92"
     volumes:
       - .:/var/www
+    networks:
+      - mathz_net
 
   mathz_database:
     image: mysql:8.0
@@ -16,6 +18,8 @@ services:
       MYSQL_ROOT_PASSWORD: leagueofdraven
     ports:
       - "3307:3306"
+    networks:
+      - mathz_net
 
   mathz_websocker:
     container_name: soketi
@@ -25,10 +29,16 @@ services:
       - '${SOKETI_PORT:-6001}:6001'
       - '${SOKETI_METRICS_SERVER_PORT:-9601}:9601'
     environment:
-      - SOKETI_DEFAULT_APP_ID=mathz_app
-      - SOKETI_DEFAULT_APP_KEY=mathz_delicious
-      - SOKETI_DEFAULT_APP_SECRET=mathz_secret
+      - SOKETI_DEFAULT_APP_ID=1959516
+      - SOKETI_DEFAULT_APP_KEY=1a9290e08c846835e39e
+      - SOKETI_DEFAULT_APP_SECRET=f9cfd16c3601b79871d1
       - PUSHER_HOST=mathz_websocker
       - PUSHER_PORT=6001
       - PUSHER_SCHEME=http
       - SOKETI_DEBUG=1
+    networks:
+      - mathz_net
+
+networks:
+  mathz_net:
+    driver: bridge

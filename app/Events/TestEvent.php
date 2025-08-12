@@ -4,18 +4,17 @@ namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Queue\SerializesModels;
 
 class TestEvent implements ShouldBroadcast
 {
-    use InteractsWithSockets, SerializesModels;
+    use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public ?array $data = null;
+    public $data = null;
 
-    public function __construct(array $dataForMessage)
+    public function __construct($dataForMessage)
     {
         $this->data = $dataForMessage;
     }
@@ -27,7 +26,7 @@ class TestEvent implements ShouldBroadcast
 
     public function broadcastAs(): string
     {
-        return 'send_message';
+        return 'send';
     }
 
     public function broadcastWith(): array

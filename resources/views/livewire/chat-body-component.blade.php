@@ -1,13 +1,24 @@
 <div class="flex flex-col container-body-message overflow-y-auto">
+    <script>
+        document.addEventListener('livewire:load', () => {
+            if (window.Echo) {
+                window.Echo.channel('chat')
+                      .listen('ChatMessage', (e) => {
+                          console.log('Mensagem recebida:', e);
+                      });
+            } else {
+                console.error('Echo ainda não está disponível');
+            }
+        });
+    </script>
 
-    @foreach($this->messages as $message)
+@foreach($this->messages as $message)
         <div class="w-full flex {{ $message['from_me'] ? 'justify-end' : 'justify-start' }} mb-2 px-2">
             <div class="{{ $message['from_me'] ? 'from-me' : 'not-from-me' }}">
                 {{ $message['message'] }}
             </div>
         </div>
     @endforeach
-
     <style>
         .container-body-message {
             height: 78vh;
