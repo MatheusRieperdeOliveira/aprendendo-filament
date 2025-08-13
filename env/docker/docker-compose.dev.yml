@@ -1,7 +1,7 @@
 services:
   mathz_app:
     build:
-      context: ..
+      context: ../..
       dockerfile: DockerfileDev
     ports:
       - "9002:92"

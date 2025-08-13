@@ -12,8 +12,10 @@ COPY . /var/www
 WORKDIR /var/www
 
 RUN composer install --no-dev --optimize-autoloader
+RUN composer require filament/filament:"^3.3" -W \
+RUN php artisan filament:install --panels
 
 # Copiar config do nginx customizado
-COPY ./nginx.conf /etc/nginx/sites-available/default
+COPY ./env/docker/nginx/sites.conf /etc/nginx/sites-available/default
 
 CMD ["php-fpm"]
