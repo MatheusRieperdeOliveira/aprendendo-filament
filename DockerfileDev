@@ -2,7 +2,7 @@ FROM php:8.3-fpm
 
 ENV NVM_DIR=/root/.nvm
 
-# Atualiza e instala dependências
+# Atualiza e instala dependências, incluindo libs para intl, zip e outras
 RUN apt-get update && apt-get install -y \
     libicu-dev \
     libzip-dev \
@@ -22,8 +22,9 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install -j$(nproc) intl zip pdo pdo_mysql gd \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Copia configs do supervisor
+# Copia configurações do supervisor
 COPY ./env/docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
 RUN groupadd supervisor && usermod -a -G supervisor root
 
 # Configura PHP
@@ -32,17 +33,15 @@ COPY ./env/docker/php-fpm/opcache.ini /usr/local/etc/php/conf.d/
 COPY ./env/docker/php-fpm/laravel.ini /usr/local/etc/php/conf.d/
 COPY ./env/docker/php-fpm/xlaravel.pool.conf /usr/local/etc/php-fpm.d/
 
-# Define diretório e copia código
+# Define diretório de trabalho e copia código
 WORKDIR /var/www
 COPY .. .
 
-# Instala Composer
-RUN php -r "copy('http://getcomposer.org/installer', 'composer-setup.php');" \
-    && php composer-setup.php \
-    && php -r "unlink('composer-setup.php');" \
-    && mv composer.phar /usr/local/bin/composer
-
-# Instala dependências sem rodar scripts do Laravel
+# Install Composer
+RUN php -r "copy('http://getcomposer.org/installer', 'composer-setup.php');"
+RUN php composer-setup.php
+RUN php -r "unlink('composer-setup.php');"
+RUN mv composer.phar /usr/local/bin/composer
 RUN composer install --no-scripts --ignore-platform-reqs --no-interaction --prefer-dist
 RUN composer require filament/filament:"^3.3" -W --no-scripts --ignore-platform-reqs --no-interaction --prefer-dist
 
@@ -51,6 +50,7 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | b
     && . "$NVM_DIR/nvm.sh" \
     && nvm install 22 \
     && nvm alias default 22
+
 ENV NODE_VERSION=22
 ENV PATH=$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 
