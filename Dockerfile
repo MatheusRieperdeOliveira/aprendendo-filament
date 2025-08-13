@@ -8,14 +8,18 @@ RUN apt-get update && apt-get install -y \
     libicu-dev \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-COPY . /var/www
-WORKDIR /var/www
+WORKDIR /var/www/app_finances
 
-RUN composer install
-RUN composer require filament/filament:"^3.3" -W \
-RUN php artisan filament:install --panels
+# Copiar arquivos do app
+COPY . .
+
+RUN composer install --no-dev --optimize-autoloader
 
 # Copiar config do nginx customizado
 COPY ./env/docker/nginx/sites.conf /etc/nginx/sites-available/default
 
-CMD ["php-fpm"]
+# Expor porta 80 pro Nginx
+EXPOSE 80
+
+# Iniciar PHP-FPM e Nginx juntos
+CMD ["sh", "-c", "php-fpm & nginx -g 'daemon off;'"]
