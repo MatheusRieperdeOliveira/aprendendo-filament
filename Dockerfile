@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
 COPY . /var/www
 WORKDIR /var/www
 
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install
 RUN composer require filament/filament:"^3.3" -W \
 RUN php artisan filament:install --panels
 
