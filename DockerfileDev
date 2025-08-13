@@ -42,8 +42,9 @@ RUN php -r "copy('http://getcomposer.org/installer', 'composer-setup.php');"
 RUN php composer-setup.php
 RUN php -r "unlink('composer-setup.php');"
 RUN mv composer.phar /usr/local/bin/composer
-RUN composer install
-RUN composer require filament/filament:"^3.3" -W
+RUN composer install --no-scripts --no-autoloader --ignore-platform-reqs
+RUN composer require filament/filament:"^3.3" -W --no-scripts --no-autoloader --ignore-platform-reqs
+RUN composer dump-autoload --optimize
 
 
 # Instala Node.js via NVM
